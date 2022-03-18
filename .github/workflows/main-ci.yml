@@ -34,5 +34,5 @@ jobs:
       - name: Run tests
         run: |
           cd build
-          valgrind --leak-check=full -s --log-file=valgrind_tests_report.txt ./test/turn_test
-          lcov -t ./test/toun_test -o coverage.info -c -d tour_lib/ && genhtml -o coverage_report coverage.info
+          valgrind --leak-check=full -s --log-file=valgrind_tests_report.txt ./test/tour_test
+          lcov -t ./test/tour_test -o coverage.info -c -d tour_lib/ && genhtml -o coverage_report coverage.info
