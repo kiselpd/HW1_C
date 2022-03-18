@@ -35,11 +35,4 @@ jobs:
         run: |
           cd build
           valgrind --leak-check=full -s --log-file=valgrind_tests_report.txt ./test/turn_test
-          lcov -t ./test/turn_test -o coverage.info -c -d tour_lib/ && genhtml -o coverage_report coverage.info
-      - name: Upload artifacts
-        uses: actions/upload-artifact@v2
-        with:
-          path: |
-            build/coverage_report/
-            build/valgrind_tests_report.txt
-            build/skyscrapers
+          lcov -t ./test/toun_test -o coverage.info -c -d tour_lib/ && genhtml -o coverage_report coverage.info
