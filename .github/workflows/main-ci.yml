@@ -1,0 +1,51 @@
+name: CI
+on:
+  push:
+    branches: [ dev ]
+  pull_request:
+    branches: [ dev ]
+    
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Build
+        run: |
+          mkdir build && cd build
+          cmake .. && cmake --build .
+          
+  valgrind:
+    runs-on: ubuntu-latest
+    steps:
+      - uses : actions/checkout@v2
+      - name: install valgrind && lcov
+        run: |
+          sudo apt update
+          sudo apt install valgrind
+          sudo apt install lcov
+          
+          
+      - name: start valgrind
+        run: |
+          cd build
+          valgrind --leak-check=full -s --log-file=valgrind_tests_report.txt ./test/tour_test
+  
+  gtest:
+    runs-on: ubuntu-latest
+    steps:
+       - uses: actions/checkout@v2
+       - name: valgrind-test
+         run: |
+          git clone https://github.com/google/googletest.git
+          cd googletest
+          mkdir build && cd build
+          cmake .. && cmake --build .
+          && sudo cmake --install .
+          lcov -t ./test/tour_test -o coverage.info -c -d tour_lib/
+          genhtml -o coverage_report coverage.info
+       
+       
+       
