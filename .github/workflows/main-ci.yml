@@ -27,6 +27,7 @@ jobs:
     steps:
       - name: Build
         run: |
+          cd ../..
           mkdir build && cd build
           cmake .. && cmake --build .
       - name: Upload artifacts
