@@ -33,7 +33,7 @@ jobs:
             build/tournament
             
     
-      - name: Install valgrind and report software
+      - name: Install valgrind and lcov
         run: |
           sudo apt update && sudo apt install valgrind lcov
       
