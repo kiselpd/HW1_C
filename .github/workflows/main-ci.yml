@@ -20,16 +20,16 @@ jobs:
         run: |
           sudo apt update && sudo apt install valgrind lcov && cd ../..
           
-      - name: Build
-        run: |
-          mkdir build && cd build
-          cmake .. && cmake --build .
-          
           
   Build:
     runs-on: ubuntu-latest
     needs:  [Install]
     steps:
+    
+      - name: Build
+        run: |
+          mkdir build && cd build
+          cmake .. && cmake --build .
       - name: Upload artifacts
         uses: actions/upload-artifact@v2
         with:
