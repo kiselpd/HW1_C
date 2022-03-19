@@ -9,13 +9,18 @@ res_t add_new(FILE* stream)
 
 	int input_int = ERROR;
 	double input_double = ERROR;
+	int check_error = 0;
 
 	printf("Enter team number: ");
 	do
 	{
 		char* str = NULL;
 		size_t count = 0;
-		getline(&str, &count, stream);
+		check_error = getline(&str, &count, stream);
+		if (check_error == ERROR)
+		{
+			perror("Incorrect input: ");
+		}
 		char* end;
 
 		input_int = strtol(str, &end, 10);
@@ -36,7 +41,6 @@ res_t add_new(FILE* stream)
 	int len = getline(&str, &count, stdin);
 	str[len - 1] = '\0';
 	add_team.name = str;
-	free(str);
 	str = NULL;
 
 	input_double = ERROR;
@@ -45,7 +49,11 @@ res_t add_new(FILE* stream)
 	{
 		char* str = NULL;
 		size_t count = 0;
-		getline(&str, &count, stream);
+		check_error = getline(&str, &count, stream);
+		if (check_error == ERROR)
+		{
+			perror("Incorrect input: ");
+		}
 		char* end;
 
 		input_double = strtod(str, &end);
@@ -66,7 +74,11 @@ res_t add_new(FILE* stream)
 	{
 		char* str = NULL;
 		size_t count = 0;
-		getline(&str, &count, stream);
+		check_error = getline(&str, &count, stream);
+		if (check_error == ERROR)
+		{
+			perror("Incorrect input: ");
+		}
 		char* end;
 
 		input_int = strtol(str, &end, 10);
@@ -118,6 +130,11 @@ int input_menu_item(FILE* stream)
 	do
 	{
 		check_menu_item = getline(&menu_item_str, &count_str, stream);
+		if (check_menu_item == ERROR)
+		{
+			perror("Incorrect input: ");
+			return ERROR;
+		}
 		
 		if ((check_menu_item == 2) && (atoi(menu_item_str) <= EXIT) && (atoi(menu_item_str) >= END))
 			menu_item = atoi(menu_item_str);
@@ -139,12 +156,12 @@ int tournament(FILE* stream)
 
 	do
 	{
-		printf("Choose option from menu:\n"
+		printf("\nChoose option from menu:\n"
 			"1.Add new team\n"
 			"2.Show all team\n"
 			"3.Show top 10 team\n"
 			"4.Exit\n"
-			"Enter menu_item:");
+			"\nEnter menu_item:");
 
 		menu_item = input_menu_item(stream);
 
@@ -158,7 +175,6 @@ int tournament(FILE* stream)
 				if (tmp == NULL)
 					perror("Memory allocation error: ");
 				team = tmp;
-				free(tmp);
 			}
 			team[team_count] = add_new(stream);
 			team_count++;
@@ -166,13 +182,13 @@ int tournament(FILE* stream)
 
 
 		case SHOW_ALL:
-			printf("All team. ");
+			printf("\nAll team. ");
 			show(team, team_count);
 			break;
 
 
 		case SHOW_TOP_10:
-			printf("Top 10 team. ");
+			printf("\nTop 10 team. ");
 			qsort(team, team_count, sizeof(res_t), compare);
 			if (team_count < TOP)
 				show(team, team_count);
