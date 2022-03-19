@@ -1,7 +1,7 @@
 on: push
 
 jobs:
-  Check:
+  Install:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2 
@@ -9,15 +9,22 @@ jobs:
         run: |
           sudo apt update && sudo apt install clang clang-tidy python3 python3-pip && sudo pip install cpplint
 
-  Build:
-    runs-on: ubuntu-latest
-    needs:  [check]
-    steps:
       - uses: actions/checkout@v2
       - name: Install GTest
         run: |
           git clone https://github.com/google/googletest.git
           cd googletest && mkdir build && cd build && cmake .. && cmake --build . && sudo cmake --install . && cd ../..
+
+      - uses: actions/checkout@v2
+      - name: Install valgrind and report software
+        run: |
+          sudo apt update && sudo apt install valgrind lcov
+          
+          
+  Build:
+    runs-on: ubuntu-latest
+    needs:  [Install]
+    steps:
       - name: Build
         run: |
           mkdir build && cd build
@@ -28,11 +35,16 @@ jobs:
           name: build-artifact
           path: |
             build/tournament
-      - name: Install valgrind and report software
-        run: |
-          sudo apt update && sudo apt install valgrind lcov
+            
+            
+  Test:
+      runs-on: ubuntu-latest
+      needs:  [Install]
+      steps:
       - name: Run tests
         run: |
           cd build
           valgrind --leak-check=full -s --log-file=valgrind_tests_report.txt ./test/tour_test
           lcov -t ./test/tour_test -o coverage.info -c -d tour_lib/ && genhtml -o coverage_report coverage.info
+          
+
