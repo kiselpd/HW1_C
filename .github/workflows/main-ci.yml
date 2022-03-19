@@ -13,7 +13,7 @@ jobs:
       - name: Install GTest
         run: |
           git clone https://github.com/google/googletest.git
-          cd googletest && mkdir build && cd build && cmake .. && cmake --build . && sudo cmake --install . && cd ../..
+          cd googletest && mkdir build && cd build && cmake .. && cmake --build . && sudo cmake --install .
 
       - uses: actions/checkout@v2
       - name: Install valgrind and report software
